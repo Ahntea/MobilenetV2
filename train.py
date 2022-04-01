@@ -10,6 +10,10 @@ from MobilenetV2 import MobilenetV2
 from torchvision import datasets, transforms
 from EarlyStopping import EarlyStopping
 
+import time
+
+starttime = time.time()
+
 def im_convert(tensor):
   image = tensor.clone().detach().numpy()
   image = image.transpose(1, 2, 0)
@@ -49,7 +53,7 @@ running_correct_history = []
 validation_running_loss_history = []
 validation_running_correct_history = []
 
-early_stopping = EarlyStopping(patience = 7, verbose = True)
+early_stopping = EarlyStopping(patience = 7, verbose = True, path="/data/efficientnet/train/mobilenetv2.pt")
 
 print("start training")
 for e in range(epochs):
@@ -120,3 +124,7 @@ for e in range(epochs):
 
 torch.save((running_loss_history,validation_running_loss_history), "/data/efficientnet/train/loss_mobilenetv2.pt")
 torch.save((running_correct_history, validation_running_correct_history),"/data/efficientnet/train/acc_mobilenetv2.pt")
+
+times = time.time()-starttime
+with open("mobilenet_time.txt", "a") as f:
+  f.write(str(times))

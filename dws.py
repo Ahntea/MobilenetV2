@@ -5,16 +5,19 @@ import torch.optim as optim
 
 class DepthWiseSeparable(nn.Module):
     
-    def __init__(self, in_ch, out_ch, stride=1):
+    def __init__(self, in_ch, out_ch, kernel_size=3, padding=1, stride=1):
         super().__init__()
 
         self.in_ch = in_ch
         self.out_ch = out_ch
         self.stride = stride
+        self.kernel_size = kernel_size
+        self.padding = padding
         assert stride in [1,2]
 
         self.dw = nn.Sequential(
-            nn.Conv2d(self.in_ch, self.in_ch, kernel_size=3, padding=1, stride=self.stride, groups=self.in_ch,bias=False),
+            nn.Conv2d(self.in_ch, self.in_ch, kernel_size=self.kernel_size, padding=self.padding, 
+            stride=self.stride, groups=self.in_ch,bias=False),
             nn.BatchNorm2d(self.in_ch),
             nn.ReLU6(inplace=True),
         )
